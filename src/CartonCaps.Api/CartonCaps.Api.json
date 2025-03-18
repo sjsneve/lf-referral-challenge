@@ -1,0 +1,341 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "CartonCaps.Api | v1",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/Account/InviteFriends": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Get Invite Friends",
+        "description": "Retrieves data for the invite friends page, including referral code and messages.",
+        "operationId": "Get Invite Friends",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/InviteFriendsModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InviteFriendsModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InviteFriendsModel"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Registration": {
+      "get": {
+        "tags": [
+          "Registration"
+        ],
+        "summary": "Get Registration",
+        "description": "Registration endpoint w/ referral code to attach to referrer.",
+        "operationId": "Register",
+        "parameters": [
+          {
+            "name": "referral_code",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetRegistration"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetRegistration"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetRegistration"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Registration"
+        ],
+        "summary": "Create Registration",
+        "description": "Registration endpoint to create a user.",
+        "operationId": "Post Registration",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostRegistration"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostRegistration"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostRegistration"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "EmailMessage": {
+        "type": "object",
+        "properties": {
+          "subject": {
+            "maxLength": 50,
+            "type": "string",
+            "description": "The email subject"
+          },
+          "body": {
+            "maxLength": 500,
+            "type": "string",
+            "description": "The email body"
+          }
+        },
+        "description": "Email message contents for sharing the deep link."
+      },
+      "GetReferral": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 50,
+            "type": "string",
+            "description": "The referred users name"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ReferralStatus"
+          }
+        }
+      },
+      "GetRegistration": {
+        "required": [
+          "referralCode"
+        ],
+        "type": "object",
+        "properties": {
+          "referralCode": {
+            "maxLength": 6,
+            "pattern": "^[a-zA-Z0-9]+$",
+            "type": "string",
+            "description": "The referral code passed to the endpoint as part of registration",
+            "nullable": true
+          },
+          "showInvitationBanner": {
+            "type": "boolean"
+          }
+        }
+      },
+      "InviteFriendsModel": {
+        "required": [
+          "referralCode"
+        ],
+        "type": "object",
+        "properties": {
+          "description": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "The description of the invite friends page"
+          },
+          "referralCode": {
+            "maxLength": 6,
+            "type": "string",
+            "description": "Referral code used to refer friends to the application."
+          },
+          "emailMessage": {
+            "$ref": "#/components/schemas/EmailMessage"
+          },
+          "smsMessage": {
+            "$ref": "#/components/schemas/SmsMessage"
+          },
+          "referrals": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GetReferral"
+            },
+            "description": "List of users referred by the current user."
+          }
+        }
+      },
+      "PostRegistration": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "maxLength": 20,
+            "pattern": "^[a-zA-Z\\'\\s]+$",
+            "type": "string",
+            "description": "The users name"
+          },
+          "lastName": {
+            "maxLength": 20,
+            "pattern": "^[a-zA-Z\\'\\s]+$",
+            "type": "string",
+            "description": "The users last name"
+          },
+          "referralCode": {
+            "maxLength": 6,
+            "type": "string",
+            "description": "The referral code"
+          },
+          "dateOfBirth": {
+            "type": "string",
+            "description": "The users date of birth",
+            "format": "date-time"
+          },
+          "zipCode": {
+            "maxLength": 5,
+            "pattern": "^\\d{5}$",
+            "type": "string",
+            "description": "The users zip code"
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ReferralStatus": {
+        "enum": [
+          "Complete"
+        ],
+        "description": "The status of the referral (i.e. Completed, Pending)"
+      },
+      "SmsMessage": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "maxLength": 500,
+            "type": "string",
+            "description": "The sms message body"
+          }
+        },
+        "description": "Sms message contents for sharing the deep link."
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Account"
+    },
+    {
+      "name": "Registration"
+    }
+  ]
+}
