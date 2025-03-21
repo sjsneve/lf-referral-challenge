@@ -25,11 +25,12 @@ public class AccountController : ControllerBase
     [EndpointSummary("Get Invite Friends")]
     [EndpointDescription("Retrieves data for the invite friends page, including referral code and messages.")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesDefaultResponseType]
     public ActionResult<InviteFriendsModel> InviteFriends()
     {
         // get member by id so we can get their referral code
-        // TODO: Remove hardcoded numbers (get from auth token)
+        // TODO: Remove hardcoded numbers (get from auth token) if no auth token provided return 401
         var member = _memberService.GetMember(1);
         var model = new InviteFriendsModel(member.ReferralCode);
         
