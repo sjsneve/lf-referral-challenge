@@ -5,11 +5,12 @@
 To run the CartonCaps.Api, navigate to the `CartonCaps.Api` directory, and execute `dotnet run`.
 
 ```
-$ cd lf-referral-challange
+$ cd lf-referral-challange/src/CartonCaps.Api
+$ dotnet ef database update
 $ dotnet run
 ```
 
-To view the Scalar UI navigate to https://localhost:7265/scalar/v1
+To view the Scalar UI navigate to http://localhost:5077/scalar/v1
 
 ### Run Tests
 
