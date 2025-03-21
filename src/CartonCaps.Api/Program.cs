@@ -16,7 +16,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddAuthorizationBuilder()
     .AddPolicy("User", policy => policy.RequireRole("user"));
 
-builder.Services.AddDbContext<ReferralDb>(options => options.UseInMemoryDatabase("referral"));
+builder.Services.AddDbContext<ReferralDb>(options => options.UseSqlite("Data Source=referral.db"));
 builder.Services.AddScoped<IMemberService, MemberService>();
 builder.Services.AddScoped<IReferralService, ReferralService>();
 

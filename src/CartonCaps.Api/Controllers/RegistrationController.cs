@@ -47,8 +47,19 @@ public class RegistrationController : ControllerBase
             LastName = registration.LastName,
             // rest of member creation, for this example only first and last name are needed.
         };
-        
-        _referralService.AddReferral(member, registration.ReferralCode);
+
+        // add referral code if available
+        if (!string.IsNullOrEmpty(registration.ReferralCode)){
+            try
+            {
+                _referralService.AddReferral(member, registration.ReferralCode);
+            }
+            catch (Exception ex)
+            {
+                // log invalid member codes
+                _logger.LogError(ex, ex.Message);
+            }
+        }
         
         return Created();
     }

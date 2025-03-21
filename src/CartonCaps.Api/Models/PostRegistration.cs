@@ -17,7 +17,7 @@ public class PostRegistration
     
     [Description("The referral code")]
     [MaxLength(6)]
-    public string ReferralCode { get; set; } = string.Empty;
+    public string? ReferralCode { get; set; } = string.Empty;
     
     [Description("The users date of birth")]
     public DateTime DateOfBirth { get; set; }

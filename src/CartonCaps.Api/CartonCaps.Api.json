@@ -290,7 +290,8 @@
           "referralCode": {
             "maxLength": 6,
             "type": "string",
-            "description": "The referral code"
+            "description": "The referral code",
+            "nullable": true
           },
           "dateOfBirth": {
             "type": "string",
