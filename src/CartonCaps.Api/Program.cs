@@ -1,5 +1,6 @@
 using CartonCaps.Api.Contexts;
 using CartonCaps.Api.Interfaces;
+using CartonCaps.Api.OpenApi;
 using CartonCaps.Api.Services;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
@@ -8,9 +9,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(options => {
+    options.UseJwtBearerAuthentication();
+});
 
-builder.Services.AddAuthentication().AddJwtBearer();
+builder.Services.AddAuthentication("Bearer").AddJwtBearer(options => {
+    options.IncludeErrorDetails = true;
+});
+
 builder.Services.AddAuthorization();
 
 builder.Services.AddAuthorizationBuilder()
