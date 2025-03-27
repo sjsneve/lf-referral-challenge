@@ -1,6 +1,9 @@
 ﻿using System.Net;
+using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Text.Json;
 using CartonCaps.Api.Models;
+using CartonCaps.Tests.Mocks;
 
 namespace TrainingApi.Tests;
 
@@ -14,10 +17,16 @@ public class IntegrationTests
 
         // Act
         var client = app.CreateClient();
-        var response = await client.GetAsync("/account/invitefriends");
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer",
+            MockJwtTokens.GenerateJwtToken([
+                new Claim("sub", "1"),
+                new Claim("role", "User")
+            ]));
+
+        var response = await client.GetAsync("/referrals/invitefriends");
         var responseBody = await response.Content.ReadAsStringAsync();
-        InviteFriendsModel? inviteFriendsModel =  JsonSerializer.Deserialize<InviteFriendsModel>(responseBody, JsonSerializerOptions.Web);
-        
+        InviteFriendsModel? inviteFriendsModel = JsonSerializer.Deserialize<InviteFriendsModel>(responseBody, JsonSerializerOptions.Web);
+
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Equal("ABC123", inviteFriendsModel.ReferralCode);

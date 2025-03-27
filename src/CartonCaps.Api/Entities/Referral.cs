@@ -1,26 +1,34 @@
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 using CartonCaps.Api.Enums;
 
 namespace CartonCaps.Api.Entities;
 
-public record Referral
+public record class Referral : BaseEntity
 {
     public Referral() { }
     
-    public Referral(int id, string referralId, string name, ReferralStatus status)
+    [SetsRequiredMembers]
+    public Referral(int id, string referralCode, int memberId, ReferralStatus status)
     {
         Id = id;
-        ReferralCode = referralId;
-        Name = name;
+        ReferralCode = referralCode;
+        ReferredMemberId = memberId;
         Status = status;
     }
     
-    public int Id { get; set; }
+    [Required]
+    [MaxLength(6)]
+    public required string ReferralCode { get; set; } = string.Empty;
     
-    public string ReferralCode { get; set; } = string.Empty;
+    [Required]
+    public required int ReferredMemberId { get; set; }
     
-    public string Name { get; set; } = string.Empty;
+    [ForeignKey(nameof(ReferredMemberId))]
+    public Member ReferredMember { get; set; } = null!;
+    
+    [Required]
+    public required ReferralStatus Status { get; set; }
 
-    public ReferralStatus Status { get; set; }
 }

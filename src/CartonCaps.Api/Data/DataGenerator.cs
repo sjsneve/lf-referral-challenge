@@ -21,8 +21,8 @@ public static class DataGenerator
         var member3 = new Member(3, "Sam", "Smith", "ABC125");
         context.Members.AddRange(member1, member2, member3);
 
-        var referral1 = new Referral(1, "ABC123", "Jane Doe", ReferralStatus.Complete);
-        var referral2 = new Referral(2, "ABC123", "Sam Smith", ReferralStatus.Complete);
+        var referral1 = new Referral(1, "ABC123", 2, ReferralStatus.Complete);
+        var referral2 = new Referral(2, "ABC123", 3, ReferralStatus.Complete);
 
         context.Referrals.AddRange(referral1, referral2);
 

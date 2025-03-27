@@ -1,0 +1,21 @@
+@HostAddress = https://localhost:7265
+
+GET {{HostAddress}}/Referrals/InviteFriends
+Authorization: Bearer [example_bearer_token]
+Accept: application/json
+
+###
+
+GET {{HostAddress}}/Referrals/Register?referral_code=ABC123
+Accept: application/json
+
+###
+
+POST {{HostAddress}}/Referrals/CreateReferral
+Authorization: Bearer [example_bearer_token]
+Content-Type: application/json
+Accept: application/json
+
+{
+    "referralCode": "ABC123"
+}

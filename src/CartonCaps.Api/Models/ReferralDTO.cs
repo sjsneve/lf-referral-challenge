@@ -4,7 +4,7 @@ using CartonCaps.Api.Enums;
 
 namespace CartonCaps.Api.Models;
 
-public class GetReferral
+public class ReferralDTO
 {
     
     [Description("The referred users name")]

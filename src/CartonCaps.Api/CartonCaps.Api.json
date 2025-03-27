@@ -5,14 +5,14 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/Account/InviteFriends": {
+    "/Referrals/InviteFriends": {
       "get": {
         "tags": [
-          "Account"
+          "Referrals"
         ],
         "summary": "Get Invite Friends",
         "description": "Retrieves data for the invite friends page, including referral code and messages.",
-        "operationId": "Get Invite Friends",
+        "operationId": "GetInviteFriends",
         "responses": {
           "200": {
             "description": "OK",
@@ -54,6 +54,26 @@
               }
             }
           },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
           "default": {
             "description": "",
             "content": {
@@ -74,17 +94,22 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     },
-    "/Registration": {
+    "/Referrals/Register": {
       "get": {
         "tags": [
-          "Registration"
+          "Referrals"
         ],
         "summary": "Get Registration",
         "description": "Registration endpoint w/ referral code to attach to referrer.",
-        "operationId": "Register",
+        "operationId": "GetRegistration",
         "parameters": [
           {
             "name": "referral_code",
@@ -116,29 +141,31 @@
             }
           }
         }
-      },
+      }
+    },
+    "/Referrals/CreateReferral": {
       "post": {
         "tags": [
-          "Registration"
+          "Referrals"
         ],
-        "summary": "Create Registration",
-        "description": "Registration endpoint to create a user.",
-        "operationId": "Post Registration",
+        "summary": "Create Referral",
+        "description": "Create a referral for user.",
+        "operationId": "CreateReferral",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/PostRegistration"
+                "$ref": "#/components/schemas/CreateReferralDTO"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/PostRegistration"
+                "$ref": "#/components/schemas/CreateReferralDTO"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/PostRegistration"
+                "$ref": "#/components/schemas/CreateReferralDTO"
               }
             }
           },
@@ -188,12 +215,31 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": [ ]
+          }
+        ]
       }
     }
   },
   "components": {
     "schemas": {
+      "CreateReferralDTO": {
+        "required": [
+          "referralCode"
+        ],
+        "type": "object",
+        "properties": {
+          "referralCode": {
+            "pattern": "^[A-Za-z0-9]{6}$",
+            "type": "string",
+            "description": "The referral code",
+            "nullable": true
+          }
+        }
+      },
       "EmailMessage": {
         "type": "object",
         "properties": {
@@ -210,19 +256,6 @@
         },
         "description": "Email message contents for sharing the deep link."
       },
-      "GetReferral": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "maxLength": 50,
-            "type": "string",
-            "description": "The referred users name"
-          },
-          "status": {
-            "$ref": "#/components/schemas/ReferralStatus"
-          }
-        }
-      },
       "GetRegistration": {
         "required": [
           "referralCode"
@@ -231,7 +264,7 @@
         "properties": {
           "referralCode": {
             "maxLength": 6,
-            "pattern": "^[a-zA-Z0-9]+$",
+            "pattern": "^[a-zA-Z0-9]{6}$",
             "type": "string",
             "description": "The referral code passed to the endpoint as part of registration",
             "nullable": true
@@ -266,43 +299,9 @@
           "referrals": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/GetReferral"
+              "$ref": "#/components/schemas/ReferralDTO"
             },
             "description": "List of users referred by the current user."
-          }
-        }
-      },
-      "PostRegistration": {
-        "type": "object",
-        "properties": {
-          "firstName": {
-            "maxLength": 20,
-            "pattern": "^[a-zA-Z\\'\\s]+$",
-            "type": "string",
-            "description": "The users name"
-          },
-          "lastName": {
-            "maxLength": 20,
-            "pattern": "^[a-zA-Z\\'\\s]+$",
-            "type": "string",
-            "description": "The users last name"
-          },
-          "referralCode": {
-            "maxLength": 6,
-            "type": "string",
-            "description": "The referral code",
-            "nullable": true
-          },
-          "dateOfBirth": {
-            "type": "string",
-            "description": "The users date of birth",
-            "format": "date-time"
-          },
-          "zipCode": {
-            "maxLength": 5,
-            "pattern": "^\\d{5}$",
-            "type": "string",
-            "description": "The users zip code"
           }
         }
       },
@@ -332,6 +331,19 @@
           }
         }
       },
+      "ReferralDTO": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 50,
+            "type": "string",
+            "description": "The referred users name"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ReferralStatus"
+          }
+        }
+      },
       "ReferralStatus": {
         "enum": [
           "Complete"
@@ -349,14 +361,17 @@
         },
         "description": "Sms message contents for sharing the deep link."
       }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "Bearer"
+      }
     }
   },
   "tags": [
     {
-      "name": "Account"
-    },
-    {
-      "name": "Registration"
+      "name": "Referrals"
     }
   ]
 }

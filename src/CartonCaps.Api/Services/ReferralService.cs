@@ -2,6 +2,7 @@ using CartonCaps.Api.Contexts;
 using CartonCaps.Api.Entities;
 using CartonCaps.Api.Enums;
 using CartonCaps.Api.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace CartonCaps.Api.Services;
 
@@ -21,22 +22,17 @@ public class ReferralService : IReferralService
         return _context.Referrals.ToList();
     }
 
-    public Referral AddReferral(Member member, string referralCode)
+    public Referral? AddReferral(int memberId, string referralCode)
     {
         // Check if referral code exists
         var isValidReferralCode = _context.Members.Any(m => m.ReferralCode == referralCode);
 
         if (!isValidReferralCode)
         {
-            throw new Exception($"Invalid Referral code: {referralCode}");
+            return null;
         }
 
-        var newReferral = new Referral
-        {
-            ReferralCode = referralCode,
-            Name = member.FirstName + " " + member.LastName,
-            Status = ReferralStatus.Complete
-        };
+        var newReferral = new Referral (0, referralCode, memberId, ReferralStatus.Complete);
         
         _context.Referrals.Add(newReferral);
         _context.SaveChanges();
@@ -44,8 +40,13 @@ public class ReferralService : IReferralService
         return newReferral;
     }
 
-    public IEnumerable<Referral> GetReferralsByReferralCode(string referralCode)
+    public IEnumerable<Referral> GetReferralsByReferralCode(string referralCode, int page = 1)
     {
-        return _context.Referrals.Where(r => r.ReferralCode == referralCode).ToList();
+        const int pageSize = 5;
+        return _context.Referrals
+            .Include(referral => referral.ReferredMember)
+            .Where(r => r.ReferralCode == referralCode)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize).ToList();
     }
 }
