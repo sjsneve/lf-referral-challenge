@@ -4,7 +4,7 @@ namespace CartonCaps.Api.Interfaces;
 
 public interface IReferralService
 {
-    Referral? AddReferral(int memberId, string referralCode);
+    Task<Referral?> AddReferral(int memberId, string referralCode);
 
-    IEnumerable<Referral> GetReferralsByReferralCode(string referralCode, int page = 1);
+    Task<IEnumerable<Referral>> GetReferralsByReferralCode(string referralCode, int page = 1);
 }

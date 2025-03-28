@@ -22,10 +22,10 @@ public class ReferralService : IReferralService
         return _context.Referrals.ToList();
     }
 
-    public Referral? AddReferral(int memberId, string referralCode)
+    public async Task<Referral?> AddReferral(int memberId, string referralCode)
     {
         // Check if referral code exists
-        var isValidReferralCode = _context.Members.Any(m => m.ReferralCode == referralCode);
+        var isValidReferralCode = await _context.Members.AnyAsync(m => m.ReferralCode == referralCode);
 
         if (!isValidReferralCode)
         {
@@ -35,18 +35,18 @@ public class ReferralService : IReferralService
         var newReferral = new Referral (0, referralCode, memberId, ReferralStatus.Complete);
         
         _context.Referrals.Add(newReferral);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         
         return newReferral;
     }
 
-    public IEnumerable<Referral> GetReferralsByReferralCode(string referralCode, int page = 1)
+    public async Task<IEnumerable<Referral>> GetReferralsByReferralCode(string referralCode, int page = 1)
     {
         const int pageSize = 5;
-        return _context.Referrals
+        return await _context.Referrals
             .Include(referral => referral.ReferredMember)
             .Where(r => r.ReferralCode == referralCode)
             .Skip((page - 1) * pageSize)
-            .Take(pageSize).ToList();
+            .Take(pageSize).ToListAsync();
     }
 }

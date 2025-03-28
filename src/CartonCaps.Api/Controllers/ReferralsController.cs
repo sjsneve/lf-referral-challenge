@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CartonCaps.Api.Controllers;
 
 [ApiController]
-[Route("[controller]/[action]")]
+[Route("api/[controller]")]
 public class ReferralsController : ControllerBase
 {
     private readonly ILogger<ReferralsController> _logger;
@@ -22,7 +22,7 @@ public class ReferralsController : ControllerBase
         _referralService = referralService;
     }
 
-    [HttpGet]
+    [HttpGet("invitefriends")]
     [Authorize(Roles = "User")]
     [EndpointName("GetInviteFriends")]
     [EndpointSummary("Get Invite Friends")]
@@ -31,7 +31,7 @@ public class ReferralsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesDefaultResponseType]
-    public ActionResult<InviteFriendsModel> InviteFriends()
+    public async Task<ActionResult<InviteFriendsModel>> InviteFriends()
     {
         // get member by id so we can get their referral code
         var memberIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -43,7 +43,7 @@ public class ReferralsController : ControllerBase
         var member = _memberService.GetMember(memberId);
         var model = new InviteFriendsModel(member.ReferralCode);
         
-        var referrals = _referralService.GetReferralsByReferralCode(member.ReferralCode);
+        var referrals = await _referralService.GetReferralsByReferralCode(member.ReferralCode);
         model.Referrals = referrals.Select(r => new ReferralDTO()
         {
             Name = r.ReferredMember.FirstName + " " + r.ReferredMember.LastName,
@@ -53,7 +53,7 @@ public class ReferralsController : ControllerBase
         return Ok(model);
     }
 
-    [HttpGet]
+    [HttpGet("registration")]
     [EndpointName("GetRegistration")]
     [EndpointSummary("Get Registration")]
     [EndpointDescription("Registration endpoint w/ referral code to attach to referrer.")]
