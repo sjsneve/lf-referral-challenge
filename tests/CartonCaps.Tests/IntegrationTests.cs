@@ -23,7 +23,7 @@ public class IntegrationTests
                 new Claim("role", "User")
             ]));
 
-        var response = await client.GetAsync("/referrals/invitefriends");
+        var response = await client.GetAsync("api/referrals/invitefriends");
         var responseBody = await response.Content.ReadAsStringAsync();
         InviteFriendsModel? inviteFriendsModel = JsonSerializer.Deserialize<InviteFriendsModel>(responseBody, JsonSerializerOptions.Web);
 
