@@ -4,7 +4,8 @@
         <TargetFramework>net9.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-    </PropertyGroup>
+      <UserSecretsId>4fb9f0a9-5c82-45b2-a26e-2aec869daf73</UserSecretsId>
+  </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="coverlet.collector" Version="6.0.2" />

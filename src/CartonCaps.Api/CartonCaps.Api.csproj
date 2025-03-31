@@ -1,11 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
-    </PropertyGroup>
+      <UserSecretsId>733848de-cbaf-4f72-8eb2-17748cc42a28</UserSecretsId>
+  </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
       <NoWarn>1701;1702;1591</NoWarn>

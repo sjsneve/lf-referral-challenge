@@ -16,12 +16,12 @@ public class UnitTests
         // Arrange
         var mockLogger = new Mock<ILogger<MemberService>>();
         var mockReferralDb = CreateMockDbContext();
-        
+
         var service = new MemberService(mockLogger.Object, mockReferralDb.Object);
-        
+
         // Act
         var result = service.GetMember(1);
-        
+
         // Assert
         Assert.NotNull(result);
         Assert.Equal(1, result.Id);
@@ -34,12 +34,12 @@ public class UnitTests
         // Arrange
         var mockLogger = new Mock<ILogger<ReferralService>>();
         var mockReferralDb = CreateMockDbContext();
-        
+
         var service = new ReferralService(mockLogger.Object, mockReferralDb.Object);
-        
+
         // Act
         var result = service.GetReferralsByReferralCode("ABC123");
-        
+
         // Assert
         Assert.Equal(2, result.Count());
     }
@@ -50,31 +50,33 @@ public class UnitTests
         // Arrange
         var mockLogger = new Mock<ILogger<ReferralService>>();
         var mockReferralDb = CreateMockDbContext();
-        
+
         var service = new ReferralService(mockLogger.Object, mockReferralDb.Object);
-        var newMember = new Member
-        {
-            FirstName = "Jack",
-            LastName = "Doe",
-        };
+        var newMemberId = 2;
         var expectedReferral = new Referral
         {
             Id = 0,
-            Name = "Jack Doe",
+            ReferredMemberId = newMemberId,
             ReferralCode = "ABC123",
             Status = ReferralStatus.Complete,
+            CreatedAt = DateTime.MinValue,
+            UpdatedAt = DateTime.MinValue
         };
-        
+
         // Act
-        var referral = service.AddReferral(newMember, "ABC123");
-        
+        var referral = service.AddReferral(newMemberId, "ABC123");
+
         // Assert
+        Assert.IsType<Referral>(referral);
+        
+        referral.CreatedAt = DateTime.MinValue; // Ignore CreatedAt for comparison
+        referral.UpdatedAt = DateTime.MinValue; // Ignore UpdatedAt for comparison
         Assert.Equal(expectedReferral, referral);
     }
 
     private static Mock<ReferralDb> CreateMockDbContext()
     {
-        
+
         var members = new List<Member>
         {
             new (1, "John", "Doe", "ABC123"),
@@ -84,24 +86,24 @@ public class UnitTests
 
         var referrals = new List<Referral>
         {
-            new(1, "ABC123", "Jane Doe", ReferralStatus.Complete),
-            new(2, "ABC123", "Sam Smith", ReferralStatus.Complete)
+            new (1, "ABC123", 2, ReferralStatus.Complete),
+            new (2, "ABC123", 3, ReferralStatus.Complete)
         }.AsQueryable();
-        
+
         var mockMemberSet = CreateMockDbSet(members);
         var mockReferralSet = CreateMockDbSet(referrals);
 
         var mockContext = new Mock<ReferralDb>();
         mockContext.Setup(c => c.Members).Returns(mockMemberSet.Object);
         mockContext.Setup(c => c.Referrals).Returns(mockReferralSet.Object);
-        
+
         return mockContext;
     }
-    
-    private static Mock<DbSet<T>> CreateMockDbSet<T>(IQueryable<T> data) where T: class
+
+    private static Mock<DbSet<T>> CreateMockDbSet<T>(IQueryable<T> data) where T : class
     {
         var mockSet = new Mock<DbSet<T>>();
-        
+
         mockSet.As<IQueryable<T>>().Setup(m => m.Provider).Returns(data.Provider);
         mockSet.As<IQueryable<T>>().Setup(m => m.Expression).Returns(data.Expression);
         mockSet.As<IQueryable<T>>().Setup(m => m.ElementType).Returns(data.ElementType);

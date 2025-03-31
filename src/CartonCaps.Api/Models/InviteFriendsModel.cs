@@ -20,7 +20,7 @@ public class InviteFriendsModel
     public SmsMessage SmsMessage { get; set; }
     
     [Description("List of users referred by the current user.")]
-    public IEnumerable<GetReferral> Referrals { get; set; }
+    public IEnumerable<ReferralDTO> Referrals { get; set; }
 
     public InviteFriendsModel(string referralCode)
     {
@@ -36,6 +36,6 @@ public class InviteFriendsModel
         {
             Message = $"Hi! Join me in earning cash for our school ... use the link below to download the Carton Caps app here: {siteUrl}{referralCode}"
         };
-        Referrals = new List<GetReferral>();
+        Referrals = new List<ReferralDTO>();
     }
 }

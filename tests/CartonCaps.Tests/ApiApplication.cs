@@ -1,8 +1,11 @@
 using CartonCaps.Api.Contexts;
+using CartonCaps.Tests.Mocks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 internal class ApiApplication : WebApplicationFactory<Program>
 {
@@ -26,6 +29,17 @@ internal class ApiApplication : WebApplicationFactory<Program>
                     .UseInMemoryDatabase("Tests")
                     .UseApplicationServiceProvider(sp)
                     .Options;
+            });
+
+            services.Configure<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme, options =>
+            {
+                var config = new OpenIdConnectConfiguration()
+                {
+                    Issuer = MockJwtTokens.Issuer
+                };
+
+                config.SigningKeys.Add(MockJwtTokens.SecurityKey);
+                options.Configuration = config;
             });
         });
 
