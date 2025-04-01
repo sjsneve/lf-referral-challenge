@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using Microsoft.IdentityModel.Tokens;
 
-namespace CartonCaps.Tests.Mocks;
+namespace CartonCaps.IntegrationTests.Mocks;
 
 public static class MockJwtTokens
 {

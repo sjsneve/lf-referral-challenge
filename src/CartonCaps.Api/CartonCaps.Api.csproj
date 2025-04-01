@@ -17,6 +17,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.0" />
         <PackageReference Include="microsoft.aspnetcore.authentication.jwtbearer" Version="9.0.3" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.2" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.3" />
@@ -34,7 +35,7 @@
     </ItemGroup>
     
     <ItemGroup>
-        <InternalsVisibleTo Include="CartonCaps.Tests" />
+        <InternalsVisibleTo Include="CartonCaps.IntegrationTests" />
     </ItemGroup>
     
 

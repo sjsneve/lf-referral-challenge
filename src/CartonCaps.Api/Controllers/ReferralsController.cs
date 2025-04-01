@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Asp.Versioning;
 using CartonCaps.Api.Entities;
 using CartonCaps.Api.Interfaces;
 using CartonCaps.Api.Models;
@@ -22,7 +23,8 @@ public class ReferralsController : ControllerBase
         _referralService = referralService;
     }
 
-    [HttpGet("invitefriends")]
+    [ApiVersion(1)]
+    [HttpGet("invite-friends")]
     [Authorize(Roles = "User")]
     [EndpointName("GetInviteFriends")]
     [EndpointSummary("Get Invite Friends")]
@@ -73,7 +75,7 @@ public class ReferralsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesDefaultResponseType]
-    public IActionResult CreateReferral(CreateReferralDTO model)
+    public async Task<IActionResult> CreateReferral(CreateReferralDTO model)
     {
         // get member by id so we can get their referral code
         Member? member = null;
@@ -94,7 +96,7 @@ public class ReferralsController : ControllerBase
         }
 
         // add referral code if available
-        var referral = _referralService.AddReferral(member.Id, model.ReferralCode);
+        var referral = await _referralService.AddReferral(member.Id, model.ReferralCode);
 
         if (referral == null)
         {

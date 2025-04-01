@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using CartonCaps.Api.Contexts;
 using CartonCaps.Api.Interfaces;
 using CartonCaps.Api.OpenApi;
@@ -9,7 +10,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
-builder.Services.AddOpenApi(options => {
+builder.Services.AddApiVersioning(options =>
+{
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.ReportApiVersions = true;
+    
+}).AddMvc();
+builder.Services.AddOpenApi(options =>
+{
     options.UseJwtBearerAuthentication();
 });
 

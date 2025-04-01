@@ -5,7 +5,9 @@ VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CartonCaps.Api", "src\CartonCaps.Api\CartonCaps.Api.csproj", "{334274A0-D5D2-423F-8342-104E9F64B099}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CartonCaps.Tests", "tests\CartonCaps.Tests\CartonCaps.Tests.csproj", "{C042CCA6-06FF-4604-B38F-BC08AA7C1947}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CartonCaps.UnitTests", "tests\CartonCaps.UnitTests\CartonCaps.UnitTests.csproj", "{C042CCA6-06FF-4604-B38F-BC08AA7C1947}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CartonCaps.IntegrationTests", "tests\CartonCaps.IntegrationTests\CartonCaps.IntegrationTests.csproj", "{F96B0589-F934-4F23-87F0-D462F4B23D18}"
 EndProject
 
 Global
@@ -26,6 +28,10 @@ Global
 		{34285A89-A14B-4BEA-AC35-A0255E0BE73F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{34285A89-A14B-4BEA-AC35-A0255E0BE73F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{34285A89-A14B-4BEA-AC35-A0255E0BE73F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F96B0589-F934-4F23-87F0-D462F4B23D18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F96B0589-F934-4F23-87F0-D462F4B23D18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F96B0589-F934-4F23-87F0-D462F4B23D18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F96B0589-F934-4F23-87F0-D462F4B23D18}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

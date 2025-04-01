@@ -1,5 +1,5 @@
 using CartonCaps.Api.Contexts;
-using CartonCaps.Tests.Mocks;
+using CartonCaps.IntegrationTests.Mocks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
