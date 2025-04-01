@@ -18,5 +18,5 @@ Unit and integration tests are located under the `tests` directory.
 
 ```
 $ cd tests/CartonCaps.Tests
-$ dotnet tests
+$ dotnet test
 ```
