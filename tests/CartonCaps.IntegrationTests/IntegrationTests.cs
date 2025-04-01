@@ -3,9 +3,9 @@ using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Json;
 using CartonCaps.Api.Models;
-using CartonCaps.Tests.Mocks;
+using CartonCaps.IntegrationTests.Mocks;
 
-namespace TrainingApi.Tests;
+namespace CartonCaps.IntegrationTests;
 
 public class IntegrationTests
 {
@@ -23,12 +23,12 @@ public class IntegrationTests
                 new Claim("role", "User")
             ]));
 
-        var response = await client.GetAsync("/referrals/invitefriends");
+        var response = await client.GetAsync("api/referrals/invite-friends");
         var responseBody = await response.Content.ReadAsStringAsync();
         InviteFriendsModel? inviteFriendsModel = JsonSerializer.Deserialize<InviteFriendsModel>(responseBody, JsonSerializerOptions.Web);
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        Assert.Equal("ABC123", inviteFriendsModel.ReferralCode);
+        Assert.Equal("ABC123", inviteFriendsModel!.ReferralCode);
     }
 }

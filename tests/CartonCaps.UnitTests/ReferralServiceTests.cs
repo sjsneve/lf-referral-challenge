@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace CartonCaps.Tests;
+namespace CartonCaps.UnitTests;
 
-public class UnitTests
+public class ReferralServiceTests
 {
     [Fact]
     public void GetMemberReturnsCorrectMember()
@@ -29,7 +29,7 @@ public class UnitTests
     }
 
     [Fact]
-    public void GetReferralsByReferralCodeReturnsCorrectReferrals()
+    public async Task GetReferralsByReferralCodeReturnsCorrectReferrals()
     {
         // Arrange
         var mockLogger = new Mock<ILogger<ReferralService>>();
@@ -38,14 +38,14 @@ public class UnitTests
         var service = new ReferralService(mockLogger.Object, mockReferralDb.Object);
 
         // Act
-        var result = service.GetReferralsByReferralCode("ABC123");
+        var result = await service.GetReferralsByReferralCode("ABC123");
 
         // Assert
         Assert.Equal(2, result.Count());
     }
 
     [Fact]
-    public void AddReferralCreatesReferral()
+    public async Task AddReferralCreatesReferral()
     {
         // Arrange
         var mockLogger = new Mock<ILogger<ReferralService>>();
@@ -64,7 +64,7 @@ public class UnitTests
         };
 
         // Act
-        var referral = service.AddReferral(newMemberId, "ABC123");
+        var referral = await service.AddReferral(newMemberId, "ABC123");
 
         // Assert
         Assert.IsType<Referral>(referral);
@@ -103,8 +103,15 @@ public class UnitTests
     private static Mock<DbSet<T>> CreateMockDbSet<T>(IQueryable<T> data) where T : class
     {
         var mockSet = new Mock<DbSet<T>>();
+        
+        mockSet.As<IAsyncEnumerable<T>>()
+            .Setup(m => m.GetAsyncEnumerator(CancellationToken.None))
+            .Returns(new TestDbAsyncEnumerator<T>(data.GetEnumerator()));
 
-        mockSet.As<IQueryable<T>>().Setup(m => m.Provider).Returns(data.Provider);
+        mockSet.As<IQueryable<T>>()
+            .Setup(m => m.Provider)
+            .Returns(new TestDbAsyncQueryProvider<T>(data.Provider));
+        
         mockSet.As<IQueryable<T>>().Setup(m => m.Expression).Returns(data.Expression);
         mockSet.As<IQueryable<T>>().Setup(m => m.ElementType).Returns(data.ElementType);
         mockSet.As<IQueryable<T>>().Setup(m => m.GetEnumerator()).Returns(() => data.GetEnumerator());
